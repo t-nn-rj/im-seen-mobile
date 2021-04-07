@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../widgets/app_drawer.dart';
+import '../providers/report.dart';
+import '../providers/reports.dart';
 
 class ReportScreen extends StatefulWidget {
   static const routeName = '/report';
@@ -12,6 +15,55 @@ class _ReportScreenState extends State<ReportScreen> {
   double _currentSliderValue = 3;
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
+
+  var _reportData = Report(
+    reportId: null,
+    userId: null,
+    studentName: null,
+    description: null,
+    severity: null,
+    dateTime: null,
+  );
+
+  Future<void> _saveForm() async {
+    final isValid = _form.currentState.validate();
+    if (!isValid) {
+      return;
+    }
+    _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await Provider.of<Reports>(
+        context,
+        listen: false,
+      ).addReport(_reportData);
+    } catch (error) {
+      await showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An error occurred!'),
+          content: Text('Something went wrong.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Okay'),
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,7 +99,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        //
+                        _reportData.studentName = value;
                       },
                     ),
                     SizedBox(
@@ -68,7 +120,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         return null;
                       },
                       onSaved: (value) {
-                        //
+                        _reportData.description = value;
                       },
                     ),
                     SizedBox(
@@ -88,6 +140,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       divisions: 4,
                       label: _currentSliderValue.toString(),
                       onChanged: (double value) {
+                        _reportData.severity = value as int;
                         setState(() {
                           _currentSliderValue = value;
                         });
@@ -102,7 +155,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         ElevatedButton(
                           child: Text('Submit'),
                           onPressed: () {
-                            //
+                            _saveForm();
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
