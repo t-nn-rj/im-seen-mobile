@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'screens/report_screen.dart';
 import 'screens/auth_screen.dart';
 
 void main() {
@@ -18,6 +19,10 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Lato',
       ),
       home: AuthScreen(),
+      routes: {
+        AuthScreen.routeName: (ctx) => AuthScreen(),
+        ReportScreen.routeName: (ctx) => ReportScreen(),
+      },
     );
   }
 }
