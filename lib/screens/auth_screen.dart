@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 enum AuthMode { Signup, Login }
 
+/* This class renders the authentication page
+*/
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
 
@@ -18,8 +20,8 @@ class AuthScreen extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
-                  Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                  Color.fromRGBO(0, 255, 14, 1).withOpacity(0.5),
+                  Color.fromRGBO(0, 241, 255, 1).withOpacity(0.9),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -52,7 +54,7 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        'MentalAlert',
+                        'Mental Alert',
                         style: TextStyle(
                           color:
                               Theme.of(context).accentTextTheme.headline6.color,
@@ -77,6 +79,8 @@ class AuthScreen extends StatelessWidget {
   }
 }
 
+/* This class renders the login and sign up form
+*/
 class AuthCard extends StatefulWidget {
   const AuthCard({
     Key key,
@@ -96,6 +100,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  // for switching between login and signup
   void _switchAuthMode() {
     if (_authMode == AuthMode.Login) {
       setState(() {
@@ -117,7 +122,7 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 260,
+        height: _authMode == AuthMode.Signup ? 370 : 260,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
@@ -127,12 +132,26 @@ class _AuthCardState extends State<AuthCard> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
+                if (_authMode == AuthMode.Signup)
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Your name'),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please provide your name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      // TODO
+                    },
+                  ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-Mail'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
-                      return 'Invalid email!';
+                      return 'Invalid email';
                     }
                     return null;
                   },
@@ -146,7 +165,7 @@ class _AuthCardState extends State<AuthCard> {
                   controller: _passwordController,
                   validator: (value) {
                     if (value.isEmpty || value.length < 5) {
-                      return 'Password is too short!';
+                      return 'Password is too short';
                     }
                     return null;
                   },
@@ -162,7 +181,7 @@ class _AuthCardState extends State<AuthCard> {
                     validator: _authMode == AuthMode.Signup
                         ? (value) {
                             if (value != _passwordController.text) {
-                              return 'Passwords do not match!';
+                              return 'Passwords do not match';
                             }
                             return null;
                           }
@@ -193,7 +212,7 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 TextButton(
                   child: Text(
-                      '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                      '${_authMode == AuthMode.Login ? 'Create an account' : 'Have an acount? LOGIN'}'),
                   onPressed: _switchAuthMode,
                   style: TextButton.styleFrom(
                     padding:

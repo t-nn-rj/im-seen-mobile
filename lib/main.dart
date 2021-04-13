@@ -4,15 +4,15 @@ import 'screens/report_screen.dart';
 import 'screens/auth_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MentalAlert());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MentalAlert extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'MentalAlert',
+      // defines theme for the whole app
       theme: ThemeData(
         primarySwatch: Colors.blue,
         accentColor: Colors.deepOrange,

@@ -21,6 +21,7 @@ class Reports with ChangeNotifier {
     return _reports.firstWhere((report) => report.reportId == id);
   }
 
+  // uses http request to save a report to database
   Future<void> addReport(Report report) async {
     final timestamp = DateTime.now();
     final url =

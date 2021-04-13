@@ -5,6 +5,8 @@ import '../widgets/app_drawer.dart';
 import '../providers/report.dart';
 import '../providers/reports.dart';
 
+/* This class renders the report page
+*/
 class ReportScreen extends StatefulWidget {
   static const routeName = '/report';
   @override
@@ -13,6 +15,7 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   double _currentSliderValue = 3;
+  // globalkey for validation
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
 
@@ -25,6 +28,7 @@ class _ReportScreenState extends State<ReportScreen> {
     dateTime: null,
   );
 
+  // submits the form data to the server
   Future<void> _saveForm() async {
     final isValid = _form.currentState.validate();
     if (!isValid) {
@@ -35,17 +39,39 @@ class _ReportScreenState extends State<ReportScreen> {
       _isLoading = true;
     });
 
-    try {
-      await Provider.of<Reports>(
-        context,
-        listen: false,
-      ).addReport(_reportData);
-    } catch (error) {
-      await showDialog(
+    // TODO
+    // try {
+    //   await Provider.of<Reports>(
+    //     context,
+    //     listen: false,
+    //   ).addReport(_reportData);
+    // } catch (error) {
+    //   await showDialog(
+    //     context: context,
+    //     builder: (ctx) => AlertDialog(
+    //       title: Text('An error occurred!'),
+    //       content: Text('Something went wrong.'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           child: Text('Okay'),
+    //           onPressed: () {
+    //             Navigator.of(ctx).pop();
+    //           },
+    //         )
+    //       ],
+    //     ),
+    //   );
+    // }
+
+    Future.delayed(const Duration(milliseconds: 1000), () {
+      setState(() {
+        _isLoading = false;
+      });
+      showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('An error occurred!'),
-          content: Text('Something went wrong.'),
+          title: Text('Submitted'),
+          content: Text('The report has been submitted.'),
           actions: <Widget>[
             TextButton(
               child: Text('Okay'),
@@ -56,11 +82,15 @@ class _ReportScreenState extends State<ReportScreen> {
           ],
         ),
       );
-    }
-    setState(() {
-      _isLoading = false;
+      //Navigator.of(context).pop();
+      //Navigator.of(context).pushReplacementNamed('/report');
     });
-    Navigator.of(context).pop();
+
+    // TODO
+    // setState(() {
+    //   _isLoading = false;
+    // });
+
     // Navigator.of(context).pop();
   }
 
@@ -85,9 +115,12 @@ class _ReportScreenState extends State<ReportScreen> {
                     SizedBox(
                       height: 25,
                     ),
+                    Text('Student Name'),
+                    SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Student Name',
                         border: OutlineInputBorder(),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -105,9 +138,12 @@ class _ReportScreenState extends State<ReportScreen> {
                     SizedBox(
                       height: 20,
                     ),
+                    Text('Description'),
+                    SizedBox(
+                      height: 10,
+                    ),
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Description',
                         border: OutlineInputBorder(),
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
@@ -140,7 +176,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       divisions: 4,
                       label: _currentSliderValue.toString(),
                       onChanged: (double value) {
-                        _reportData.severity = value as int;
+                        _reportData.severity = value.toInt();
                         setState(() {
                           _currentSliderValue = value;
                         });

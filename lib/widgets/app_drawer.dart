@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+/* This class renders the drawer which shows up from the left
+ */
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
