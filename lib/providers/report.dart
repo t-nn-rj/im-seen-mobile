@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 
 class Report with ChangeNotifier {
   String reportId;
-  String userId;
+  int userId;
   String studentName;
   String description;
   int severity;
@@ -20,4 +20,15 @@ class Report with ChangeNotifier {
     @required this.severity,
     @required this.dateTime,
   });
+
+  factory Report.fromJson(Map<String, dynamic> json) {
+    return Report(
+      reportId: json['id'],
+      userId: json['userId'],
+      studentName: json['studentName'],
+      description: json['description'],
+      severity: json['severity'],
+      dateTime: json['date'],
+    );
+  }
 }

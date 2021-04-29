@@ -18,13 +18,13 @@ class _ReportScreenState extends State<ReportScreen> {
   // globalkey for validation
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
-
+  var reports = new Reports();
   var _reportData = Report(
     reportId: null,
     userId: null,
     studentName: null,
     description: null,
-    severity: null,
+    severity: 3,
     dateTime: null,
   );
 
@@ -35,43 +35,26 @@ class _ReportScreenState extends State<ReportScreen> {
       return;
     }
     _form.currentState.save();
+    // shows loading spin
     setState(() {
       _isLoading = true;
     });
 
     // TODO
-    // try {
-    //   await Provider.of<Reports>(
-    //     context,
-    //     listen: false,
-    //   ).addReport(_reportData);
-    // } catch (error) {
-    //   await showDialog(
-    //     context: context,
-    //     builder: (ctx) => AlertDialog(
-    //       title: Text('An error occurred!'),
-    //       content: Text('Something went wrong.'),
-    //       actions: <Widget>[
-    //         TextButton(
-    //           child: Text('Okay'),
-    //           onPressed: () {
-    //             Navigator.of(ctx).pop();
-    //           },
-    //         )
-    //       ],
-    //     ),
-    //   );
-    // }
-
-    Future.delayed(const Duration(milliseconds: 1000), () {
-      setState(() {
-        _isLoading = false;
-      });
-      showDialog(
+    try {
+      Future<Report> report = reports.addReport(_reportData);
+      // await Provider.of<Reports>(
+      //   context,
+      //   listen: false,
+      // ).addReport(_reportData);
+      //print(report);
+    } catch (error) {
+      print(error);
+      await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('Submitted'),
-          content: Text('The report has been submitted.'),
+          title: Text('An error occurred!'),
+          content: Text('Something went wrong.'),
           actions: <Widget>[
             TextButton(
               child: Text('Okay'),
@@ -82,16 +65,51 @@ class _ReportScreenState extends State<ReportScreen> {
           ],
         ),
       );
-      //Navigator.of(context).pop();
-      //Navigator.of(context).pushReplacementNamed('/report');
+      return;
+    }
+
+    // disables loading spin
+    setState(() {
+      _isLoading = false;
     });
-
-    // TODO
-    // setState(() {
-    //   _isLoading = false;
-    // });
-
+    // informs users reported submitted
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('Submitted'),
+        content: Text('The report has been submitted.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
     // Navigator.of(context).pop();
+
+    // Future.delayed(const Duration(milliseconds: 1000), () {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
+    //   showDialog(
+    //     context: context,
+    //     builder: (ctx) => AlertDialog(
+    //       title: Text('Submitted'),
+    //       content: Text('The report has been submitted.'),
+    //       actions: <Widget>[
+    //         TextButton(
+    //           child: Text('Okay'),
+    //           onPressed: () {
+    //             Navigator.of(ctx).pop();
+    //           },
+    //         )
+    //       ],
+    //     ),
+    //   );
+    // });
   }
 
   @override
@@ -210,7 +228,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         ElevatedButton(
                           child: Text('Reset'),
                           onPressed: () {
-                            //
+                            // TODO
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
