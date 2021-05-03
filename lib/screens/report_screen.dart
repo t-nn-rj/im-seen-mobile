@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/app_drawer.dart';
-import '../providers/report.dart';
+import '../models/report.dart';
 import '../providers/reports.dart';
 
 /* This class renders the report page
@@ -18,7 +18,6 @@ class _ReportScreenState extends State<ReportScreen> {
   // globalkey for validation
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
-  var reports = new Reports();
   var _reportData = Report(
     reportId: null,
     userId: null,
@@ -40,16 +39,16 @@ class _ReportScreenState extends State<ReportScreen> {
       _isLoading = true;
     });
 
-    // TODO
+    // calls provider Reports to save report
+    // and updates UI accordingly
     try {
-      Future<Report> report = reports.addReport(_reportData);
-      // await Provider.of<Reports>(
-      //   context,
-      //   listen: false,
-      // ).addReport(_reportData);
-      //print(report);
+      await Provider.of<Reports>(
+        context,
+        listen: false,
+      ).addReport(_reportData);
     } catch (error) {
       print(error);
+      // if error, shows an error dialog
       await showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -88,28 +87,6 @@ class _ReportScreenState extends State<ReportScreen> {
         ],
       ),
     );
-    // Navigator.of(context).pop();
-
-    // Future.delayed(const Duration(milliseconds: 1000), () {
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-    //   showDialog(
-    //     context: context,
-    //     builder: (ctx) => AlertDialog(
-    //       title: Text('Submitted'),
-    //       content: Text('The report has been submitted.'),
-    //       actions: <Widget>[
-    //         TextButton(
-    //           child: Text('Okay'),
-    //           onPressed: () {
-    //             Navigator.of(ctx).pop();
-    //           },
-    //         )
-    //       ],
-    //     ),
-    //   );
-    // });
   }
 
   @override
