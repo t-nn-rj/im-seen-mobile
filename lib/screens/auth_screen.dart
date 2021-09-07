@@ -66,7 +66,7 @@ class AuthScreen extends StatelessWidget {
                     ),
                   ),
                   Flexible(
-                    flex: deviceSize.width > 600 ? 2 : 1,
+                    flex: deviceSize.height > 600 ? 3 : 1,
                     child: AuthCard(),
                   ),
                 ],
@@ -122,9 +122,9 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 370 : 260,
-        constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+        //height: _authMode == AuthMode.Signup ? 370 : 260,
+        //constraints:
+        //    BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -132,13 +132,13 @@ class _AuthCardState extends State<AuthCard> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                if (_authMode == AuthMode.Signup)
+                if (_authMode == AuthMode.Signup) ...[
                   TextFormField(
-                    decoration: InputDecoration(labelText: 'Your name'),
-                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(labelText: 'First name'),
+                    keyboardType: TextInputType.name,
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please provide your name';
+                        return 'Please provide your first name';
                       }
                       return null;
                     },
@@ -146,8 +146,48 @@ class _AuthCardState extends State<AuthCard> {
                       // TODO
                     },
                   ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Last name'),
+                    keyboardType: TextInputType.name,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please provide your last name';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      // TODO
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Job title'),
+                    keyboardType: TextInputType.text,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please provide your job title';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      // TODO
+                    },
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Phone number'),
+                    keyboardType: TextInputType.phone,
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please provide your phone number';
+                      }
+                      return null;
+                    },
+                    onSaved: (value) {
+                      // TODO
+                    },
+                  ),
+                ],
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Username'),
+                  decoration: InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
