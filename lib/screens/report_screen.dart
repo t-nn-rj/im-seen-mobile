@@ -4,11 +4,13 @@ import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 import '../models/report.dart';
 import '../providers/reports.dart';
+import '../models/user.dart';
 
 /* This class renders the report page
 */
 class ReportScreen extends StatefulWidget {
   static const routeName = '/report';
+
   @override
   _ReportScreenState createState() => _ReportScreenState();
 }
@@ -42,7 +44,7 @@ class _ReportScreenState extends State<ReportScreen> {
     // calls provider Reports to save report
     // and updates UI accordingly
     try {
-      await Provider.of<Reports>(
+      await Provider.of<ReportProvider>(
         context,
         listen: false,
       ).addReport(_reportData);

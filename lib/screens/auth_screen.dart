@@ -3,6 +3,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth.dart';
+import '../providers/user_provider.dart';
+import '../models/user.dart';
+
 enum AuthMode { Signup, Login }
 
 /* This class renders the authentication page
@@ -93,10 +97,8 @@ class AuthCard extends StatefulWidget {
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  Map<String, String> _authData = {
-    'email': '',
-    'password': '',
-  };
+  String _firstname, _lastname, _email, _phone, _jobTitle, _password;
+
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
@@ -113,8 +115,89 @@ class _AuthCardState extends State<AuthCard> {
     }
   }
 
+  // for show error message
+  void _showErrorDialog(String message, Function func) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('An Error Occurred!'),
+        content: Text(message),
+        actions: <Widget>[
+          ElevatedButton(
+            onPressed: func,
+            child: Text('Try again'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
+
+    var doAuth = () {
+      final form = _formKey.currentState;
+      // validates form before proceeding
+      if (form.validate()) {
+        form.save();
+
+        setState(() {
+          _isLoading = true;
+        });
+
+        if (_authMode == AuthMode.Login) {
+          // log in
+          // calls login in auth provider
+          final Future<Map<String, dynamic>> authMessage =
+              auth.login(_email, _password);
+
+          authMessage.then((response) {
+            if (response['status']) {
+              User user = response['user'];
+              Provider.of<UserProvider>(context, listen: false).setUser(user);
+              Navigator.of(context).pushReplacementNamed('/report');
+            } else {
+              String error =
+                  'Login failed - ' + response['message']['message'].toString();
+              var func = () {
+                Navigator.of(context).pushReplacementNamed('/auth');
+              };
+              _showErrorDialog(error, func);
+            }
+          });
+        } else {
+          // sign up
+          // calls signup in auth provider
+          final Future<Map<String, dynamic>> authMessage = auth.signup(
+              _firstname, _lastname, _email, _phone, _jobTitle, _password);
+
+          authMessage.then((response) {
+            if (response['status']) {
+              User user = response['user'];
+              Provider.of<UserProvider>(context, listen: false).setUser(user);
+              Navigator.of(context).pushReplacementNamed('/report');
+            } else {
+              String error = 'Sign-up failed - ' +
+                  response['message']['message'].toString();
+              var func = () {
+                Navigator.of(context).pushReplacementNamed('/auth');
+              };
+              _showErrorDialog(error, func);
+            }
+          });
+        }
+      } else {
+        var func = () {
+          Navigator.of(context).pop();
+        };
+        _showErrorDialog('Form is invalid', func);
+      }
+      setState(() {
+        _isLoading = false;
+      });
+    };
+
     final deviceSize = MediaQuery.of(context).size;
     return Card(
       shape: RoundedRectangleBorder(
@@ -122,9 +205,6 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 8.0,
       child: Container(
-        //height: _authMode == AuthMode.Signup ? 370 : 260,
-        //constraints:
-        //    BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
         padding: EdgeInsets.all(16.0),
         child: Form(
@@ -143,7 +223,7 @@ class _AuthCardState extends State<AuthCard> {
                       return null;
                     },
                     onSaved: (value) {
-                      // TODO
+                      _firstname = value;
                     },
                   ),
                   TextFormField(
@@ -156,7 +236,7 @@ class _AuthCardState extends State<AuthCard> {
                       return null;
                     },
                     onSaved: (value) {
-                      // TODO
+                      _lastname = value;
                     },
                   ),
                   TextFormField(
@@ -169,7 +249,7 @@ class _AuthCardState extends State<AuthCard> {
                       return null;
                     },
                     onSaved: (value) {
-                      // TODO
+                      _jobTitle = value;
                     },
                   ),
                   TextFormField(
@@ -182,7 +262,7 @@ class _AuthCardState extends State<AuthCard> {
                       return null;
                     },
                     onSaved: (value) {
-                      // TODO
+                      _phone = value;
                     },
                   ),
                 ],
@@ -196,7 +276,7 @@ class _AuthCardState extends State<AuthCard> {
                     return null;
                   },
                   onSaved: (value) {
-                    _authData['email'] = value;
+                    _email = value;
                   },
                 ),
                 TextFormField(
@@ -210,7 +290,7 @@ class _AuthCardState extends State<AuthCard> {
                     return null;
                   },
                   onSaved: (value) {
-                    _authData['password'] = value;
+                    _password = value;
                   },
                 ),
                 if (_authMode == AuthMode.Signup)
@@ -236,9 +316,7 @@ class _AuthCardState extends State<AuthCard> {
                   ElevatedButton(
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/report');
-                    },
+                    onPressed: doAuth,
                     style: ElevatedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),

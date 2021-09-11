@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth.dart';
+
 /* This class renders the drawer which shows up from the left
  */
 class AppDrawer extends StatelessWidget {
@@ -44,6 +46,7 @@ class AppDrawer extends StatelessWidget {
             leading: Icon(Icons.exit_to_app),
             title: Text('Logout'),
             onTap: () {
+              Provider.of<AuthProvider>(context, listen: false).logout();
               Navigator.of(context).pop();
               Navigator.of(context).pushReplacementNamed('/');
             },
