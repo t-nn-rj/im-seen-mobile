@@ -1,16 +1,13 @@
 // The User model
 class User {
-  int userId;
+  String userId;
   String firstname;
   String lastname;
   String email;
   String phone;
   String jobTitle;
-  String deptId;
-  String roleId;
-  String groupId;
   String token;
-  String renewalToken;
+  String expiresIn;
 
   User(
       {this.userId,
@@ -19,11 +16,8 @@ class User {
       this.email,
       this.phone,
       this.jobTitle,
-      //this.deptId,
-      //this.roleId,
-      //this.groupId,
       this.token,
-      this.renewalToken});
+      this.expiresIn});
 
   // translate Json data to user model
   factory User.fromJson(Map<String, dynamic> responseData) {
@@ -34,10 +28,7 @@ class User {
         email: responseData['email'],
         phone: responseData['phone'],
         jobTitle: responseData['jobTitle'],
-        //deptId: responseData['deptId'],
-        //roleId: responseData['roleId'],
-        //groupId: responseData['groupId'],
         token: responseData['access_token'],
-        renewalToken: responseData['renewal_token']);
+        expiresIn: responseData['expiresIn']);
   }
 }

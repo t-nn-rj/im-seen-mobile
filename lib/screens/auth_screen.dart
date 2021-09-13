@@ -158,8 +158,7 @@ class _AuthCardState extends State<AuthCard> {
               Provider.of<UserProvider>(context, listen: false).setUser(user);
               Navigator.of(context).pushReplacementNamed('/report');
             } else {
-              String error =
-                  'Login failed - ' + response['message']['message'].toString();
+              String error = 'Login failed - ' + response['message'];
               var func = () {
                 Navigator.of(context).pushReplacementNamed('/auth');
               };
@@ -178,8 +177,7 @@ class _AuthCardState extends State<AuthCard> {
               Provider.of<UserProvider>(context, listen: false).setUser(user);
               Navigator.of(context).pushReplacementNamed('/report');
             } else {
-              String error = 'Sign-up failed - ' +
-                  response['message']['message'].toString();
+              String error = 'Sign-up failed - ' + response['message'];
               var func = () {
                 Navigator.of(context).pushReplacementNamed('/auth');
               };
@@ -191,7 +189,7 @@ class _AuthCardState extends State<AuthCard> {
         var func = () {
           Navigator.of(context).pop();
         };
-        _showErrorDialog('Form is invalid', func);
+        _showErrorDialog('Some information is invalid.', func);
       }
       setState(() {
         _isLoading = false;

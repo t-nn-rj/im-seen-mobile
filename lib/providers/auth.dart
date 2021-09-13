@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user.dart';
@@ -41,12 +41,14 @@ class AuthProvider with ChangeNotifier {
 
     // sends user login info to server and get response
     try {
-      Response response = await post(
-        AppUrl.login,
+      http.Response response = await http.post(
+        Uri.parse(AppUrl.login),
         body: json.encode(loginData),
         headers: {'Content-Type': 'application/json'},
       );
 
+      print(response.statusCode);
+      print(response.body);
       // if success
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -67,7 +69,9 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
         result = {
           'status': false,
-          'message': json.decode(response.body)['error']
+          'message': response.body.isNotEmpty
+              ? json.decode(response.body)['error']
+              : 'server error',
         };
       }
     } on Exception catch (e) {
@@ -103,13 +107,13 @@ class AuthProvider with ChangeNotifier {
 
     // sends user registration info to server and get response
     try {
-      Response response = await post(AppUrl.signup,
+      http.Response response = await http.post(Uri.parse(AppUrl.signup),
           body: json.encode(signupData),
           headers: {'Content-Type': 'application/json'});
 
-      final Map<String, dynamic> responseData = json.decode(response.body);
-
       if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+
         var userData = responseData['data'];
 
         User authUser = User.fromJson(userData);
@@ -125,8 +129,9 @@ class AuthProvider with ChangeNotifier {
         _signedupStatus = Status.NotRegistered;
         result = {
           'status': false,
-          'message': 'Registration failed',
-          'data': responseData
+          'message': response.body.isNotEmpty
+              ? json.decode(response.body)['error']
+              : 'server error',
         };
       }
     } on Exception catch (e) {

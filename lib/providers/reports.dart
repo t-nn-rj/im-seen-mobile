@@ -16,7 +16,7 @@ class ReportProvider with ChangeNotifier {
     //final url = Uri.http(server, 'api/Reports');
 
     final response = await http.post(
-      AppUrl.add_report,
+      Uri.parse(AppUrl.add_report),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
