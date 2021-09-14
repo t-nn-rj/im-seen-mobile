@@ -22,13 +22,13 @@ class User {
   // translate Json data to user model
   factory User.fromJson(Map<String, dynamic> responseData) {
     return User(
-        userId: responseData['id'],
+        userId: responseData['id'], // no need
         firstname: responseData['firstname'],
         lastname: responseData['lastname'],
         email: responseData['email'],
         phone: responseData['phone'],
         jobTitle: responseData['jobTitle'],
         token: responseData['access_token'],
-        expiresIn: responseData['expiresIn']);
+        expiresIn: responseData['expiresIn']); // consider
   }
 }

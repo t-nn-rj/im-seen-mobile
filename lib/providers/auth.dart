@@ -33,7 +33,8 @@ class AuthProvider with ChangeNotifier {
     var result;
 
     final Map<String, dynamic> loginData = {
-      'user': {'email': email, 'password': password}
+      'username': email,
+      'password': password
     };
 
     _loggedInStatus = Status.Authenticating;
@@ -47,8 +48,8 @@ class AuthProvider with ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
 
-      print(response.statusCode);
-      print(response.body);
+      //print(response.statusCode);
+      //print(response.body);
       // if success
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -92,14 +93,12 @@ class AuthProvider with ChangeNotifier {
     var result;
 
     final Map<String, dynamic> signupData = {
-      'user': {
-        'firstname': firstname,
-        'lastname': lastname,
-        'email': email,
-        'phone': phone,
-        'jobTitle': jobTitle,
-        'password': password,
-      }
+      'firstname': firstname,
+      'lastname': lastname,
+      'email': email,
+      'phone': phone,
+      'job': jobTitle,
+      'password': password,
     };
 
     _signedupStatus = Status.Registering;
