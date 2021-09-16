@@ -268,9 +268,9 @@ class _AuthCardState extends State<AuthCard> {
                   decoration: InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
-                      return 'Invalid email';
-                    }
+                    //if (value.isEmpty || !value.contains('@')) {
+                    //  return 'Invalid email';
+                    //}
                     return null;
                   },
                   onSaved: (value) {
@@ -282,7 +282,7 @@ class _AuthCardState extends State<AuthCard> {
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
-                    if (value.isEmpty || value.length < 5) {
+                    if (value.isEmpty || value.length < 3) {
                       return 'Password is too short';
                     }
                     return null;

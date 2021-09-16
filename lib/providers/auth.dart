@@ -32,9 +32,13 @@ class AuthProvider with ChangeNotifier {
   Future<Map<String, dynamic>> login(String email, String password) async {
     var result;
 
-    final Map<String, dynamic> loginData = {
+    // final Map<String, dynamic> loginData = {
+    //   'username': email,
+    //   'password': password
+    // };
+    final queryParameters = {
       'username': email,
-      'password': password
+      'password': password,
     };
 
     _loggedInStatus = Status.Authenticating;
@@ -43,13 +47,13 @@ class AuthProvider with ChangeNotifier {
     // sends user login info to server and get response
     try {
       http.Response response = await http.post(
-        Uri.parse(AppUrl.login),
-        body: json.encode(loginData),
+        Uri.http(AppUrl.baseURL, AppUrl.login, queryParameters),
+        //body: json.encode(loginData),
         headers: {'Content-Type': 'application/json'},
       );
-
-      //print(response.statusCode);
-      //print(response.body);
+      //print(Uri.parse(AppUrl.login));
+      print(response.statusCode);
+      print(response.body);
       // if success
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -70,9 +74,7 @@ class AuthProvider with ChangeNotifier {
         notifyListeners();
         result = {
           'status': false,
-          'message': response.body.isNotEmpty
-              ? json.decode(response.body)['error']
-              : 'server error',
+          'message': json.decode(response.body)['message'],
         };
       }
     } on Exception catch (e) {
@@ -92,11 +94,20 @@ class AuthProvider with ChangeNotifier {
       String email, String phone, String jobTitle, String password) async {
     var result;
 
-    final Map<String, dynamic> signupData = {
+    // final Map<String, dynamic> signupData = {
+    //   'firstname': firstname,
+    //   'lastname': lastname,
+    //   'email': email,
+    //   'phone': phone,
+    //   'job': jobTitle,
+    //   'password': password,
+    // };
+
+    final queryParameters = {
       'firstname': firstname,
       'lastname': lastname,
       'email': email,
-      'phone': phone,
+      //'phone': phone,
       'job': jobTitle,
       'password': password,
     };
@@ -106,10 +117,13 @@ class AuthProvider with ChangeNotifier {
 
     // sends user registration info to server and get response
     try {
-      http.Response response = await http.post(Uri.parse(AppUrl.signup),
-          body: json.encode(signupData),
-          headers: {'Content-Type': 'application/json'});
+      http.Response response = await http
+          .post(Uri.http(AppUrl.baseURL, AppUrl.signup, queryParameters),
+              //body: json.encode(signupData),
+              headers: {'Content-Type': 'application/json'});
 
+      print(response.statusCode);
+      print(response.body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -128,9 +142,7 @@ class AuthProvider with ChangeNotifier {
         _signedupStatus = Status.NotRegistered;
         result = {
           'status': false,
-          'message': response.body.isNotEmpty
-              ? json.decode(response.body)['error']
-              : 'server error',
+          'message': json.decode(response.body)['message'],
         };
       }
     } on Exception catch (e) {

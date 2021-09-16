@@ -1,13 +1,12 @@
 // stores api urls
 class AppUrl {
-  static const String liveBaseURL = "http://im.godandanime.tv/api";
-  static const String localBaseURL = "http://localhost/api";
+  static const String liveBaseURL = "im.godandanime.tv";
+  static const String localBaseURL = "localhost";
 
   static const String baseURL = liveBaseURL;
-  static const String login = baseURL + "/authenticate/login";
-  static const String signup = baseURL + "/authenticate/register";
-  static const String forgotPassword =
-      baseURL + "/authenticate/forgot-password";
+  static const String login = "/api/authentication/login";
+  static const String signup = "/api/authentication/register";
+  static const String forgotPassword = "/api/authentication/forgot-password";
 
-  static const String add_report = baseURL + "/observations";
+  static const String add_report = baseURL + "/api/observations";
 }

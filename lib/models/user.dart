@@ -4,7 +4,7 @@ class User {
   String firstname;
   String lastname;
   String email;
-  String phone;
+  //String phone;
   String jobTitle;
   String token;
   String expiresIn;
@@ -14,7 +14,7 @@ class User {
       this.firstname,
       this.lastname,
       this.email,
-      this.phone,
+      //this.phone,
       this.jobTitle,
       this.token,
       this.expiresIn});
@@ -22,13 +22,14 @@ class User {
   // translate Json data to user model
   factory User.fromJson(Map<String, dynamic> responseData) {
     return User(
-        userId: responseData['id'], // no need
-        firstname: responseData['firstname'],
-        lastname: responseData['lastname'],
-        email: responseData['email'],
-        phone: responseData['phone'],
-        jobTitle: responseData['jobTitle'],
-        token: responseData['access_token'],
-        expiresIn: responseData['expiresIn']); // consider
+      //userId: responseData['id'],
+      firstname: responseData['firstname'],
+      lastname: responseData['lastname'],
+      email: responseData['email'],
+      //phone: responseData['phone'],
+      jobTitle: responseData['jobTitle'],
+      token: responseData['access_token'],
+      //expiresIn: responseData['expiresIn'],
+    );
   }
 }
