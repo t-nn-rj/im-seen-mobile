@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
+import '../providers/user_provider.dart';
+import '../models/user.dart';
 
 /* This class renders the drawer which shows up from the left
  */
 class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    User user = Provider.of<UserProvider>(context, listen: false).user;
     return Drawer(
       child: Column(
         children: <Widget>[
           AppBar(
-            title: Text('Hello [User]!'),
+            title: Text('Hello ${user.email}'),
             automaticallyImplyLeading: false,
           ),
           Divider(),
@@ -26,7 +29,7 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.help),
-            title: Text('Tutorials'),
+            title: Text('Help'),
             onTap: () {
               // Navigator.of(context)
               //     .pushReplacementNamed(routeName);
@@ -35,7 +38,7 @@ class AppDrawer extends StatelessWidget {
           Divider(),
           ListTile(
             leading: Icon(Icons.edit),
-            title: Text('User Agreement'),
+            title: Text('Notice'),
             onTap: () {
               // Navigator.of(context)
               //     .pushReplacementNamed(routeName);

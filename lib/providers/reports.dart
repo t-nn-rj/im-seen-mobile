@@ -16,7 +16,7 @@ class ReportProvider with ChangeNotifier {
     //final url = Uri.http(server, 'api/Reports');
 
     final response = await http.post(
-      Uri.parse(AppUrl.add_report),
+      Uri.http(AppUrl.baseURL, AppUrl.add_report),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -27,7 +27,9 @@ class ReportProvider with ChangeNotifier {
         'reportDate': timestamp.toIso8601String(),
       }),
     );
-
+    print(Uri.http(AppUrl.baseURL, AppUrl.add_report));
+    print(response.statusCode);
+    print(response.body);
     if (response.statusCode == 201) {
       notifyListeners();
       return Report.fromJson(jsonDecode(response.body));

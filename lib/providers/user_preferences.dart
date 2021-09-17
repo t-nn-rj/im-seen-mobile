@@ -11,11 +11,11 @@ class UserPreferences {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     //prefs.setString("userId", user.userId);
-    prefs.setString("firstname", user.firstname);
-    prefs.setString("lastname", user.lastname);
+    //prefs.setString("firstname", user.firstname);
+    //prefs.setString("lastname", user.lastname);
     prefs.setString("email", user.email);
     //prefs.setString("phone", user.phone);
-    prefs.setString("jobTitle", user.jobTitle);
+    //prefs.setString("jobTitle", user.jobTitle);
     prefs.setString("token", user.token);
     //prefs.setString("expiresIn", user.expiresIn);
 
@@ -27,21 +27,21 @@ class UserPreferences {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     //String userId = prefs.getString("userId");
-    String firstname = prefs.getString("firstname");
-    String lastname = prefs.getString("lastname");
+    //String firstname = prefs.getString("firstname");
+    //String lastname = prefs.getString("lastname");
     String email = prefs.getString("email");
     //String phone = prefs.getString("phone");
-    String jobTitle = prefs.getString("jobTitle");
+    //String jobTitle = prefs.getString("jobTitle");
     String token = prefs.getString("token");
     //String expiresIn = prefs.getString("expiresIn");
 
     return User(
       //userId: userId,
-      firstname: firstname,
-      lastname: lastname,
+      //firstname: firstname,
+      //lastname: lastname,
       email: email,
       //phone: phone,
-      jobTitle: jobTitle,
+      //jobTitle: jobTitle,
       token: token,
       //expiresIn: expiresIn
     );
@@ -52,11 +52,11 @@ class UserPreferences {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     //prefs.remove("userId");
-    prefs.remove("firstname");
-    prefs.remove("lastname");
+    //prefs.remove("firstname");
+    //prefs.remove("lastname");
     prefs.remove("email");
     //prefs.remove("phone");
-    prefs.remove("jobTitle");
+    //prefs.remove("jobTitle");
     prefs.remove("token");
     //prefs.remove("expiresIn");
   }

@@ -78,7 +78,7 @@ class _ReportScreenState extends State<ReportScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text('Submitted'),
-        content: Text('The report has been submitted.'),
+        content: Text('The report has been submitted successfully.'),
         actions: <Widget>[
           TextButton(
             child: Text('Okay'),
@@ -207,7 +207,7 @@ class _ReportScreenState extends State<ReportScreen> {
                         ElevatedButton(
                           child: Text('Reset'),
                           onPressed: () {
-                            // TODO
+                            _form.currentState.reset();
                           },
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(

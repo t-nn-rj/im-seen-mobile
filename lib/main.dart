@@ -59,8 +59,6 @@ class MentalAlert extends StatelessWidget {
                     return AuthScreen();
                   else {
                     Provider.of<UserProvider>(context).setUser(snapshot.data);
-                    // TO DO check auto login
-                    //UserPreferences().removeUser();
                     return ReportScreen();
                   }
               }

@@ -51,16 +51,14 @@ class AuthProvider with ChangeNotifier {
         //body: json.encode(loginData),
         headers: {'Content-Type': 'application/json'},
       );
-      //print(Uri.parse(AppUrl.login));
-      print(response.statusCode);
-      print(response.body);
+
       // if success
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
-        var userData = responseData['data'];
+        var token = responseData['token'];
         // converts json data to user model
-        User authUser = User.fromJson(userData);
+        User authUser = new User(email: email, token: token);
         // saves user info to storage
         UserPreferences().saveUser(authUser);
 
@@ -79,7 +77,7 @@ class AuthProvider with ChangeNotifier {
       }
     } on Exception catch (e) {
       _loggedInStatus = Status.NotLoggedIn;
-      print("ERROR: $e.detail");
+      //print("ERROR: $e.detail");
       return {
         'status': false,
         'message': 'Unsuccessful Request',
@@ -127,16 +125,11 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
-        var userData = responseData['data'];
-
-        User authUser = User.fromJson(userData);
-
         _signedupStatus = Status.Registered;
-        UserPreferences().saveUser(authUser);
+
         result = {
           'status': true,
-          'message': 'Registration successful',
-          'data': authUser
+          'message': responseData['message'],
         };
       } else {
         _signedupStatus = Status.NotRegistered;

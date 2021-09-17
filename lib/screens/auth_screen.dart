@@ -105,10 +105,13 @@ class _AuthCardState extends State<AuthCard> {
   // for switching between login and signup
   void _switchAuthMode() {
     if (_authMode == AuthMode.Login) {
+      // reset form fields
+      _formKey.currentState.reset();
       setState(() {
         _authMode = AuthMode.Signup;
       });
     } else {
+      _formKey.currentState.reset();
       setState(() {
         _authMode = AuthMode.Login;
       });
@@ -158,7 +161,7 @@ class _AuthCardState extends State<AuthCard> {
               Provider.of<UserProvider>(context, listen: false).setUser(user);
               Navigator.of(context).pushReplacementNamed('/report');
             } else {
-              String error = 'Login failed - ' + response['message'];
+              String error = response['message'];
               var func = () {
                 Navigator.of(context).pushReplacementNamed('/auth');
               };
@@ -173,11 +176,27 @@ class _AuthCardState extends State<AuthCard> {
 
           authMessage.then((response) {
             if (response['status']) {
-              User user = response['user'];
-              Provider.of<UserProvider>(context, listen: false).setUser(user);
-              Navigator.of(context).pushReplacementNamed('/report');
+              //User user = response['user'];
+              //Provider.of<UserProvider>(context, listen: false).setUser(user);
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text('Registration successful!'),
+                  content: Text(
+                      'Please sign in using your registered email and password'),
+                  actions: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pushReplacementNamed('/auth');
+                      },
+                      child: Text('Log in'),
+                    ),
+                  ],
+                ),
+              );
+              //Navigator.of(context).pushReplacementNamed('/report');
             } else {
-              String error = 'Sign-up failed - ' + response['message'];
+              String error = response['message'];
               var func = () {
                 Navigator.of(context).pushReplacementNamed('/auth');
               };
@@ -268,9 +287,9 @@ class _AuthCardState extends State<AuthCard> {
                   decoration: InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    //if (value.isEmpty || !value.contains('@')) {
-                    //  return 'Invalid email';
-                    //}
+                    if (value.isEmpty || !value.contains('@')) {
+                      return 'Invalid email';
+                    }
                     return null;
                   },
                   onSaved: (value) {

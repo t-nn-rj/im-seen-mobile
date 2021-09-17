@@ -8,5 +8,5 @@ class AppUrl {
   static const String signup = "/api/authentication/register";
   static const String forgotPassword = "/api/authentication/forgot-password";
 
-  static const String add_report = baseURL + "/api/observations";
+  static const String add_report = "/api/observations";
 }
