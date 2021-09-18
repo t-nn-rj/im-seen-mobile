@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -98,62 +96,59 @@ class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
   String _firstname, _lastname, _email, _phone, _jobTitle, _password;
+  Future<Map<String, dynamic>> authMessage;
 
-  var _isLoading = false;
   final _passwordController = TextEditingController();
 
   // for switching between login and signup
   void _switchAuthMode() {
+    // reset form fields
+    _formKey.currentState.reset();
+
     if (_authMode == AuthMode.Login) {
-      // reset form fields
-      _formKey.currentState.reset();
       setState(() {
         _authMode = AuthMode.Signup;
       });
     } else {
-      _formKey.currentState.reset();
       setState(() {
         _authMode = AuthMode.Login;
       });
     }
   }
 
-  // for show error message
-  void _showErrorDialog(String message, Function func) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('An Error Occurred!'),
-        content: Text(message),
-        actions: <Widget>[
-          ElevatedButton(
-            onPressed: func,
-            child: Text('Try again'),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
-    var doAuth = () {
+    // for show error message
+    void _showErrorDialog(String message) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An Error Occurred!'),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Try again'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    var doAuth = () async {
       final form = _formKey.currentState;
       // validates form before proceeding
       if (form.validate()) {
         form.save();
 
-        setState(() {
-          _isLoading = true;
-        });
-
         if (_authMode == AuthMode.Login) {
           // log in
           // calls login in auth provider
-          final Future<Map<String, dynamic>> authMessage =
-              auth.login(_email, _password);
+          authMessage = auth.login(_email, _password);
 
           authMessage.then((response) {
             if (response['status']) {
@@ -162,16 +157,13 @@ class _AuthCardState extends State<AuthCard> {
               Navigator.of(context).pushReplacementNamed('/report');
             } else {
               String error = response['message'];
-              var func = () {
-                Navigator.of(context).pushReplacementNamed('/auth');
-              };
-              _showErrorDialog(error, func);
+              _showErrorDialog(error);
             }
           });
         } else {
           // sign up
           // calls signup in auth provider
-          final Future<Map<String, dynamic>> authMessage = auth.signup(
+          authMessage = auth.signup(
               _firstname, _lastname, _email, _phone, _jobTitle, _password);
 
           authMessage.then((response) {
@@ -197,22 +189,13 @@ class _AuthCardState extends State<AuthCard> {
               //Navigator.of(context).pushReplacementNamed('/report');
             } else {
               String error = response['message'];
-              var func = () {
-                Navigator.of(context).pushReplacementNamed('/auth');
-              };
-              _showErrorDialog(error, func);
+              _showErrorDialog(error);
             }
           });
         }
       } else {
-        var func = () {
-          Navigator.of(context).pop();
-        };
-        _showErrorDialog('Some information is invalid.', func);
+        _showErrorDialog('Some information is invalid.');
       }
-      setState(() {
-        _isLoading = false;
-      });
     };
 
     final deviceSize = MediaQuery.of(context).size;
@@ -327,34 +310,47 @@ class _AuthCardState extends State<AuthCard> {
                 SizedBox(
                   height: 20,
                 ),
-                if (_isLoading)
-                  CircularProgressIndicator()
-                else
-                  ElevatedButton(
-                    child:
-                        Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: doAuth,
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
-                      primary: Theme.of(context).primaryColor,
-                      onPrimary:
-                          Theme.of(context).primaryTextTheme.button.color,
-                    ),
-                  ),
-                TextButton(
-                  child: Text(
-                      '${_authMode == AuthMode.Login ? 'Create an account' : 'Have an acount? LOGIN'}'),
-                  onPressed: _switchAuthMode,
-                  style: TextButton.styleFrom(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    primary: Theme.of(context).primaryColor,
-                  ),
+                FutureBuilder(
+                  future: authMessage,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else {
+                      return Column(
+                        children: [
+                          ElevatedButton(
+                            child: Text(_authMode == AuthMode.Login
+                                ? 'LOGIN'
+                                : 'SIGN UP'),
+                            onPressed: doAuth,
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30.0, vertical: 8.0),
+                              primary: Theme.of(context).primaryColor,
+                              onPrimary: Theme.of(context)
+                                  .primaryTextTheme
+                                  .button
+                                  .color,
+                            ),
+                          ),
+                          TextButton(
+                            child: Text(
+                                '${_authMode == AuthMode.Login ? 'Create an account' : 'Have an acount? LOGIN'}'),
+                            onPressed: _switchAuthMode,
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 30.0, vertical: 4),
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              primary: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'models/user.dart';
+import 'screens/notice_screen.dart';
 import 'screens/report_screen.dart';
 import 'screens/auth_screen.dart';
 import 'providers/reports.dart';
@@ -66,6 +67,7 @@ class MentalAlert extends StatelessWidget {
         routes: {
           AuthScreen.routeName: (ctx) => AuthScreen(),
           ReportScreen.routeName: (ctx) => ReportScreen(),
+          NoticeScreen.routeName: (ctx) => NoticeScreen(),
         },
       ),
     );

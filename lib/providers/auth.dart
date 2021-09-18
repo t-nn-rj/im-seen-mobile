@@ -52,6 +52,9 @@ class AuthProvider with ChangeNotifier {
         headers: {'Content-Type': 'application/json'},
       );
 
+      print(response.statusCode);
+      print(response.body);
+
       // if success
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -77,7 +80,7 @@ class AuthProvider with ChangeNotifier {
       }
     } on Exception catch (e) {
       _loggedInStatus = Status.NotLoggedIn;
-      //print("ERROR: $e.detail");
+      print("ERROR: $e.detail");
       return {
         'status': false,
         'message': 'Unsuccessful Request',

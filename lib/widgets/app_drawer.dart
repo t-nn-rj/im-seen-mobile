@@ -28,20 +28,10 @@ class AppDrawer extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.help),
-            title: Text('Help'),
-            onTap: () {
-              // Navigator.of(context)
-              //     .pushReplacementNamed(routeName);
-            },
-          ),
-          Divider(),
-          ListTile(
             leading: Icon(Icons.edit),
             title: Text('Notice'),
             onTap: () {
-              // Navigator.of(context)
-              //     .pushReplacementNamed(routeName);
+              Navigator.of(context).pushReplacementNamed('/notice');
             },
           ),
           Divider(),
