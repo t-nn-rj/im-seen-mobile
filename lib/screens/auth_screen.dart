@@ -102,9 +102,6 @@ class _AuthCardState extends State<AuthCard> {
 
   // for switching between login and signup
   void _switchAuthMode() {
-    // reset form fields
-    _formKey.currentState.reset();
-
     if (_authMode == AuthMode.Login) {
       setState(() {
         _authMode = AuthMode.Signup;
@@ -339,7 +336,11 @@ class _AuthCardState extends State<AuthCard> {
                           TextButton(
                             child: Text(
                                 '${_authMode == AuthMode.Login ? 'Create an account' : 'Have an acount? LOGIN'}'),
-                            onPressed: _switchAuthMode,
+                            onPressed: () {
+                              // reset form fields
+                              _formKey.currentState.reset();
+                              _switchAuthMode();
+                            },
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(
                                   horizontal: 30.0, vertical: 4),

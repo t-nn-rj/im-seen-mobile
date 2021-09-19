@@ -32,10 +32,6 @@ class AuthProvider with ChangeNotifier {
   Future<Map<String, dynamic>> login(String email, String password) async {
     var result;
 
-    // final Map<String, dynamic> loginData = {
-    //   'username': email,
-    //   'password': password
-    // };
     final queryParameters = {
       'username': email,
       'password': password,
@@ -48,12 +44,11 @@ class AuthProvider with ChangeNotifier {
     try {
       http.Response response = await http.post(
         Uri.http(AppUrl.baseURL, AppUrl.login, queryParameters),
-        //body: json.encode(loginData),
         headers: {'Content-Type': 'application/json'},
       );
 
-      print(response.statusCode);
-      print(response.body);
+      //print(response.statusCode);
+      //print(response.body);
 
       // if success
       if (response.statusCode == 200) {
@@ -80,7 +75,7 @@ class AuthProvider with ChangeNotifier {
       }
     } on Exception catch (e) {
       _loggedInStatus = Status.NotLoggedIn;
-      print("ERROR: $e.detail");
+      //print("ERROR: $e.detail");
       return {
         'status': false,
         'message': 'Unsuccessful Request',
@@ -94,15 +89,6 @@ class AuthProvider with ChangeNotifier {
   Future<Map<String, dynamic>> signup(String firstname, String lastname,
       String email, String phone, String jobTitle, String password) async {
     var result;
-
-    // final Map<String, dynamic> signupData = {
-    //   'firstname': firstname,
-    //   'lastname': lastname,
-    //   'email': email,
-    //   'phone': phone,
-    //   'job': jobTitle,
-    //   'password': password,
-    // };
 
     final queryParameters = {
       'firstname': firstname,
@@ -123,8 +109,8 @@ class AuthProvider with ChangeNotifier {
               //body: json.encode(signupData),
               headers: {'Content-Type': 'application/json'});
 
-      print(response.statusCode);
-      print(response.body);
+      //print(response.statusCode);
+      //print(response.body);
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
@@ -143,7 +129,7 @@ class AuthProvider with ChangeNotifier {
       }
     } on Exception catch (e) {
       _signedupStatus = Status.NotRegistered;
-      print("the error is $e.detail");
+      //print("the error is $e.detail");
       return {
         'status': false,
         'message': 'Unsuccessful Request',

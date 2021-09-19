@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 import '../models/report.dart';
 import '../providers/reports.dart';
-import '../models/user.dart';
 
 /* This class renders the report page
 */
@@ -22,77 +21,75 @@ class _ReportScreenState extends State<ReportScreen> {
   var _isLoading = false;
   var _reportData = Report(
     reportId: null,
-    userId: null,
-    studentName: null,
+    userName: null,
+    firstname: null,
+    lastname: null,
     description: null,
     severity: 3,
     dateTime: null,
   );
-
-  // submits the form data to the server
-  Future<void> _saveForm() async {
-    final isValid = _form.currentState.validate();
-    if (!isValid) {
-      return;
-    }
-    _form.currentState.save();
-    // shows loading spin
-    setState(() {
-      _isLoading = true;
-    });
-
-    // calls provider Reports to save report
-    // and updates UI accordingly
-    try {
-      await Provider.of<ReportProvider>(
-        context,
-        listen: false,
-      ).addReport(_reportData);
-    } catch (error) {
-      print(error);
-      // if error, shows an error dialog
-      await showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          title: Text('An error occurred!'),
-          content: Text('Something went wrong.'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Okay'),
-              onPressed: () {
-                Navigator.of(ctx).pop();
-              },
-            )
-          ],
-        ),
-      );
-      return;
-    }
-
-    // disables loading spin
-    setState(() {
-      _isLoading = false;
-    });
-    // informs users reported submitted
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('Submitted'),
-        content: Text('The report has been submitted successfully.'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
+  Future<Map<String, dynamic>> reportSubmitted;
 
   @override
   Widget build(BuildContext context) {
+    // for show error message
+    void _showErrorDialog(String message) {
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('An error occurred!'),
+          content: Text(message),
+          actions: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Try again'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    // submits the form data to the server
+    Future<void> _saveForm() async {
+      final isValid = _form.currentState.validate();
+
+      if (!isValid) {
+        return;
+      }
+      _form.currentState.save();
+
+      // calls provider Reports to save report
+      // and updates UI accordingly
+      reportSubmitted = Provider.of<ReportProvider>(
+        context,
+        listen: false,
+      ).addReport(_reportData);
+      reportSubmitted.then((response) {
+        if (response['status']) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: Text('Submitted'),
+              content: Text('The report has been submitted successfully.'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Okay'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ),
+          );
+        } else {
+          String error = response['message'];
+          _showErrorDialog(error);
+        }
+      });
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Report'),
@@ -110,9 +107,9 @@ class _ReportScreenState extends State<ReportScreen> {
                 child: ListView(
                   children: <Widget>[
                     SizedBox(
-                      height: 25,
+                      height: 15,
                     ),
-                    Text('Student Name'),
+                    Text('Student first name'),
                     SizedBox(
                       height: 10,
                     ),
@@ -124,16 +121,39 @@ class _ReportScreenState extends State<ReportScreen> {
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please provide the student\'s name.';
+                          return 'Please provide the student\'s first name.';
                         }
                         return null;
                       },
                       onSaved: (value) {
-                        _reportData.studentName = value;
+                        _reportData.firstname = value;
                       },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 15,
+                    ),
+                    Text('Student last name'),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please provide the student\'s last name.';
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _reportData.lastname = value;
+                      },
+                    ),
+                    SizedBox(
+                      height: 15,
                     ),
                     Text('Description'),
                     SizedBox(
@@ -157,7 +177,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       },
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     Text(
                       'Level of Concern (1-5)',
@@ -180,48 +200,62 @@ class _ReportScreenState extends State<ReportScreen> {
                       },
                     ),
                     SizedBox(
-                      height: 30,
+                      height: 20,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ElevatedButton(
-                          child: Text('Submit'),
-                          onPressed: () {
-                            _saveForm();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 30.0, vertical: 8.0),
-                            primary: Theme.of(context).primaryColor,
-                            onPrimary:
-                                Theme.of(context).primaryTextTheme.button.color,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 30,
-                        ),
-                        ElevatedButton(
-                          child: Text('Reset'),
-                          onPressed: () {
-                            _form.currentState.reset();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 30.0, vertical: 8.0),
-                            primary: Theme.of(context).primaryColor,
-                            onPrimary:
-                                Theme.of(context).primaryTextTheme.button.color,
-                          ),
-                        ),
-                      ],
-                    )
+                    FutureBuilder(
+                      future: reportSubmitted,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              ElevatedButton(
+                                child: Text('Submit'),
+                                onPressed: () {
+                                  _saveForm();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 30.0, vertical: 8.0),
+                                  primary: Theme.of(context).primaryColor,
+                                  onPrimary: Theme.of(context)
+                                      .primaryTextTheme
+                                      .button
+                                      .color,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                              ElevatedButton(
+                                child: Text('Reset'),
+                                onPressed: () {
+                                  _form.currentState.reset();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 30.0, vertical: 8.0),
+                                  primary: Theme.of(context).primaryColor,
+                                  onPrimary: Theme.of(context)
+                                      .primaryTextTheme
+                                      .button
+                                      .color,
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+                      },
+                    ),
                   ],
                 ),
               ),

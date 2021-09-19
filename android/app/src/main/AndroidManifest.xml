@@ -2,7 +2,7 @@
     package="com.example.mobile_app">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="mobile_app"
+        android:label="Mental Alert"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
         <activity
