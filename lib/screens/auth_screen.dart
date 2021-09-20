@@ -151,7 +151,7 @@ class _AuthCardState extends State<AuthCard> {
             if (response['status']) {
               User user = response['user'];
               Provider.of<UserProvider>(context, listen: false).setUser(user);
-              Navigator.of(context).pushReplacementNamed('/report');
+              Navigator.of(context).pushReplacementNamed('/notice');
             } else {
               String error = response['message'];
               _showErrorDialog(error);
