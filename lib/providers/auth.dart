@@ -55,8 +55,13 @@ class AuthProvider with ChangeNotifier {
         final Map<String, dynamic> responseData = json.decode(response.body);
 
         var token = responseData['token'];
+        var refreshToken = responseData['refreshToken'];
         // converts json data to user model
-        User authUser = new User(email: email, token: token);
+        User authUser = new User(
+          email: email,
+          token: token,
+          refreshToken: refreshToken,
+        );
         // saves user info to storage
         UserPreferences().saveUser(authUser);
 

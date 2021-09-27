@@ -17,6 +17,7 @@ class UserPreferences {
     //prefs.setString("phone", user.phone);
     //prefs.setString("jobTitle", user.jobTitle);
     prefs.setString("token", user.token);
+    prefs.setString("refreshToken", user.refreshToken);
     //prefs.setString("expiresIn", user.expiresIn);
 
     return true;
@@ -33,6 +34,7 @@ class UserPreferences {
     //String phone = prefs.getString("phone");
     //String jobTitle = prefs.getString("jobTitle");
     String token = prefs.getString("token");
+    String refreshToken = prefs.getString("refreshToken");
     //String expiresIn = prefs.getString("expiresIn");
 
     return User(
@@ -43,6 +45,7 @@ class UserPreferences {
       //phone: phone,
       //jobTitle: jobTitle,
       token: token,
+      refreshToken: refreshToken,
       //expiresIn: expiresIn
     );
   }
@@ -58,6 +61,7 @@ class UserPreferences {
     //prefs.remove("phone");
     //prefs.remove("jobTitle");
     prefs.remove("token");
+    prefs.remove("refreshToken");
     //prefs.remove("expiresIn");
   }
 

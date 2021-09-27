@@ -9,4 +9,6 @@ class AppUrl {
   static const String forgotPassword = "/api/authentication/forgot-password";
 
   static const String add_report = "/api/observations";
+
+  static const String refresh_token = "/api/Tokens/Refresh";
 }

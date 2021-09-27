@@ -7,6 +7,7 @@ class User {
   //String phone;
   //String jobTitle;
   String token;
+  String refreshToken;
   //String expiresIn;
 
   User({
@@ -17,6 +18,7 @@ class User {
     //this.phone,
     //this.jobTitle,
     this.token,
+    this.refreshToken,
     //this.expiresIn,
   });
 
@@ -30,6 +32,7 @@ class User {
       //phone: responseData['phone'],
       //jobTitle: responseData['jobTitle'],
       token: responseData['token'],
+      refreshToken: responseData['refreshToken'],
       //expiresIn: responseData['expiresIn'],
     );
   }

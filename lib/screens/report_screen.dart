@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../widgets/app_drawer.dart';
 import '../models/report.dart';
 import '../providers/reports.dart';
+import '../providers/auth.dart';
 
 /* This class renders the report page
 */
@@ -32,19 +33,19 @@ class _ReportScreenState extends State<ReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     // for show error message
-    void _showErrorDialog(String message) {
+    void _showInfoDialog(
+        String title, String content, String buttonText, Function func) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
-          title: Text('An error occurred!'),
-          content: Text(message),
+          title: Text(title),
+          content: Text(content),
           actions: <Widget>[
             ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Try again'),
+              onPressed: func,
+              child: Text(buttonText),
             ),
           ],
         ),
@@ -68,24 +69,31 @@ class _ReportScreenState extends State<ReportScreen> {
       ).addReport(_reportData);
       reportSubmitted.then((response) {
         if (response['status']) {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: Text('Submitted'),
-              content: Text('The report has been submitted successfully.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Okay'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ),
-          );
+          String title = "Submitted";
+          String content = "The report has been submitted successfully.";
+          String buttonText = "Okay";
+          Function func = () {
+            Navigator.of(context).pop();
+          };
+          _showInfoDialog(title, content, buttonText, func);
+        } else if (response['loginAgain']) {
+          // fails with refresh token, back to login screen
+          String title = "An error occurred!";
+          String content = response['message'];
+          String buttonText = "Back to login";
+          Function func = () {
+            auth.logout();
+            Navigator.of(context).pushReplacementNamed('/auth');
+          };
+          _showInfoDialog(title, content, buttonText, func);
         } else {
-          String error = response['message'];
-          _showErrorDialog(error);
+          String title = "An error occurred!";
+          String content = response['message'];
+          String buttonText = "Okay";
+          Function func = () {
+            Navigator.of(context).pop();
+          };
+          _showInfoDialog(title, content, buttonText, func);
         }
       });
     }
