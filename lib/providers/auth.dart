@@ -48,7 +48,7 @@ class AuthProvider with ChangeNotifier {
       );
 
       //print(response.statusCode);
-      //print(response.body);
+      print(response.body);
 
       // if success
       if (response.statusCode == 200) {

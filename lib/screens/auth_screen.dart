@@ -98,7 +98,13 @@ class _AuthCardState extends State<AuthCard> {
   String _firstname, _lastname, _email, _phone, _jobTitle, _password;
   Future<Map<String, dynamic>> authMessage;
 
+  // field controllers to reset fields
   final _passwordController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _firstnameController = TextEditingController();
+  final _lastnameController = TextEditingController();
+  final _jobtitleController = TextEditingController();
+  final _phonenumberController = TextEditingController();
 
   // for switching between login and signup
   void _switchAuthMode() {
@@ -211,6 +217,7 @@ class _AuthCardState extends State<AuthCard> {
               children: <Widget>[
                 if (_authMode == AuthMode.Signup) ...[
                   TextFormField(
+                    controller: _firstnameController,
                     decoration: InputDecoration(labelText: 'First name'),
                     keyboardType: TextInputType.name,
                     validator: (value) {
@@ -224,6 +231,7 @@ class _AuthCardState extends State<AuthCard> {
                     },
                   ),
                   TextFormField(
+                    controller: _lastnameController,
                     decoration: InputDecoration(labelText: 'Last name'),
                     keyboardType: TextInputType.name,
                     validator: (value) {
@@ -237,6 +245,7 @@ class _AuthCardState extends State<AuthCard> {
                     },
                   ),
                   TextFormField(
+                    controller: _jobtitleController,
                     decoration: InputDecoration(labelText: 'Job title'),
                     keyboardType: TextInputType.text,
                     validator: (value) {
@@ -250,6 +259,7 @@ class _AuthCardState extends State<AuthCard> {
                     },
                   ),
                   TextFormField(
+                    controller: _phonenumberController,
                     decoration: InputDecoration(labelText: 'Phone number'),
                     keyboardType: TextInputType.phone,
                     validator: (value) {
@@ -264,6 +274,7 @@ class _AuthCardState extends State<AuthCard> {
                   ),
                 ],
                 TextFormField(
+                  controller: _emailController,
                   decoration: InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -339,6 +350,12 @@ class _AuthCardState extends State<AuthCard> {
                             onPressed: () {
                               // reset form fields
                               _formKey.currentState.reset();
+                              _firstnameController.text = "";
+                              _lastnameController.text = "";
+                              _jobtitleController.text = "";
+                              _phonenumberController.text = "";
+                              _emailController.text = "";
+                              _passwordController.text = "";
                               _switchAuthMode();
                             },
                             style: TextButton.styleFrom(
