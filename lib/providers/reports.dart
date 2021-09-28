@@ -15,8 +15,8 @@ class ReportProvider with ChangeNotifier {
 
     try {
       final response = await postReport(report);
-      //print(response.statusCode);
-      //print(response.body);
+      print(response.statusCode);
+      print(response.body);
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -40,6 +40,8 @@ class ReportProvider with ChangeNotifier {
             'refreshToken': user.refreshToken,
           }),
         );
+        print(res.statusCode);
+        print(res.body);
 
         if (res.statusCode == 200) {
           // remove old user token
@@ -55,6 +57,8 @@ class ReportProvider with ChangeNotifier {
 
           // send report again
           final resp = await postReport(report);
+          print(resp.statusCode);
+          print(resp.body);
           if (resp.statusCode == 201) {
             final Map<String, dynamic> respData = json.decode(resp.body);
             notifyListeners();
