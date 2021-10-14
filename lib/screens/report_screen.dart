@@ -21,22 +21,22 @@ class _ReportScreenState extends State<ReportScreen> {
   final _form = GlobalKey<FormState>();
   var _isLoading = false;
   var _reportData = Report(
-    reportId: null,
-    userName: null,
-    firstname: null,
-    lastname: null,
-    description: null,
+    reportId: "",
+    userName: "",
+    firstname: "",
+    lastname: "",
+    description: "",
     severity: 3,
-    dateTime: null,
+    dateTime: DateTime.now(),
   );
-  Future<Map<String, dynamic>> reportSubmitted;
+  Future<Map<String, dynamic>>? reportSubmitted;
 
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
     // for show error message
     void _showInfoDialog(
-        String title, String content, String buttonText, Function func) {
+        String title, String content, String buttonText, Function()? func) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
@@ -54,12 +54,12 @@ class _ReportScreenState extends State<ReportScreen> {
 
     // submits the form data to the server
     Future<void> _saveForm() async {
-      final isValid = _form.currentState.validate();
+      final isValid = _form.currentState!.validate();
 
       if (!isValid) {
         return;
       }
-      _form.currentState.save();
+      _form.currentState!.save();
 
       // calls provider Reports to save report
       // and updates UI accordingly
@@ -67,12 +67,12 @@ class _ReportScreenState extends State<ReportScreen> {
         context,
         listen: false,
       ).addReport(_reportData);
-      reportSubmitted.then((response) {
+      reportSubmitted!.then((response) {
         if (response['status']) {
           String title = "Submitted";
           String content = "The report has been submitted successfully.";
           String buttonText = "Okay";
-          Function func = () {
+          Function()? func = () {
             Navigator.of(context).pop();
           };
           _showInfoDialog(title, content, buttonText, func);
@@ -81,7 +81,7 @@ class _ReportScreenState extends State<ReportScreen> {
           String title = "An error occurred!";
           String content = response['message'];
           String buttonText = "Back to login";
-          Function func = () {
+          Function()? func = () {
             auth.logout();
             Navigator.of(context).pushReplacementNamed('/auth');
           };
@@ -90,7 +90,7 @@ class _ReportScreenState extends State<ReportScreen> {
           String title = "An error occurred!";
           String content = response['message'];
           String buttonText = "Okay";
-          Function func = () {
+          Function()? func = () {
             Navigator.of(context).pop();
           };
           _showInfoDialog(title, content, buttonText, func);
@@ -128,13 +128,13 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value!.isEmpty) {
                           return 'Please provide the student\'s first name.';
                         }
                         return null;
                       },
                       onSaved: (value) {
-                        _reportData.firstname = value;
+                        _reportData.firstname = value ?? "";
                       },
                     ),
                     SizedBox(
@@ -151,13 +151,13 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value!.isEmpty) {
                           return 'Please provide the student\'s last name.';
                         }
                         return null;
                       },
                       onSaved: (value) {
-                        _reportData.lastname = value;
+                        _reportData.lastname = value ?? "";
                       },
                     ),
                     SizedBox(
@@ -175,13 +175,13 @@ class _ReportScreenState extends State<ReportScreen> {
                       maxLines: 10,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value.isEmpty) {
+                        if (value!.isEmpty) {
                           return 'Please provide the description.';
                         }
                         return null;
                       },
                       onSaved: (value) {
-                        _reportData.description = value;
+                        _reportData.description = value ?? "";
                       },
                     ),
                     SizedBox(
@@ -234,7 +234,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   primary: Theme.of(context).primaryColor,
                                   onPrimary: Theme.of(context)
                                       .primaryTextTheme
-                                      .button
+                                      .button!
                                       .color,
                                 ),
                               ),
@@ -244,7 +244,7 @@ class _ReportScreenState extends State<ReportScreen> {
                               ElevatedButton(
                                 child: Text('Reset'),
                                 onPressed: () {
-                                  _form.currentState.reset();
+                                  _form.currentState!.reset();
                                 },
                                 style: ElevatedButton.styleFrom(
                                   shape: RoundedRectangleBorder(
@@ -255,7 +255,7 @@ class _ReportScreenState extends State<ReportScreen> {
                                   primary: Theme.of(context).primaryColor,
                                   onPrimary: Theme.of(context)
                                       .primaryTextTheme
-                                      .button
+                                      .button!
                                       .color,
                                 ),
                               ),

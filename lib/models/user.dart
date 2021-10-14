@@ -14,13 +14,17 @@ class User {
     //this.userId,
     //this.firstname,
     //this.lastname,
-    this.email,
+    required this.email,
     //this.phone,
     //this.jobTitle,
-    this.token,
-    this.refreshToken,
+    required this.token,
+    required this.refreshToken,
     //this.expiresIn,
   });
+
+  String get getToken {
+    return this.token;
+  }
 
   // translate Json data to user model
   factory User.fromJson(Map<String, dynamic> responseData) {

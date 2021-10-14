@@ -58,8 +58,7 @@ class AuthScreen extends StatelessWidget {
                       child: Text(
                         'Mental Alert',
                         style: TextStyle(
-                          color:
-                              Theme.of(context).accentTextTheme.headline6.color,
+                          color: Theme.of(context).colorScheme.secondary,
                           fontSize: 50,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
@@ -84,10 +83,6 @@ class AuthScreen extends StatelessWidget {
 /* This class renders the login and sign up form
 */
 class AuthCard extends StatefulWidget {
-  const AuthCard({
-    Key key,
-  }) : super(key: key);
-
   @override
   _AuthCardState createState() => _AuthCardState();
 }
@@ -95,8 +90,13 @@ class AuthCard extends StatefulWidget {
 class _AuthCardState extends State<AuthCard> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   AuthMode _authMode = AuthMode.Login;
-  String _firstname, _lastname, _email, _phone, _jobTitle, _password;
-  Future<Map<String, dynamic>> authMessage;
+  String _firstname = "";
+  String _lastname = "";
+  String _email = "";
+  String _phone = "";
+  String _jobTitle = "";
+  String _password = "";
+  Future<Map<String, dynamic>>? authMessage;
 
   // field controllers to reset fields
   final _passwordController = TextEditingController();
@@ -145,7 +145,7 @@ class _AuthCardState extends State<AuthCard> {
     var doAuth = () async {
       final form = _formKey.currentState;
       // validates form before proceeding
-      if (form.validate()) {
+      if (form!.validate()) {
         form.save();
 
         if (_authMode == AuthMode.Login) {
@@ -153,7 +153,7 @@ class _AuthCardState extends State<AuthCard> {
           // calls login in auth provider
           authMessage = auth.login(_email, _password);
 
-          authMessage.then((response) {
+          authMessage!.then((response) {
             if (response['status']) {
               User user = response['user'];
               Provider.of<UserProvider>(context, listen: false).setUser(user);
@@ -169,7 +169,7 @@ class _AuthCardState extends State<AuthCard> {
           authMessage = auth.signup(
               _firstname, _lastname, _email, _phone, _jobTitle, _password);
 
-          authMessage.then((response) {
+          authMessage!.then((response) {
             if (response['status']) {
               //User user = response['user'];
               //Provider.of<UserProvider>(context, listen: false).setUser(user);
@@ -221,13 +221,13 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'First name'),
                     keyboardType: TextInputType.name,
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return 'Please provide your first name';
                       }
                       return null;
                     },
                     onSaved: (value) {
-                      _firstname = value;
+                      _firstname = value ?? "";
                     },
                   ),
                   TextFormField(
@@ -235,13 +235,13 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'Last name'),
                     keyboardType: TextInputType.name,
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return 'Please provide your last name';
                       }
                       return null;
                     },
                     onSaved: (value) {
-                      _lastname = value;
+                      _lastname = value ?? "";
                     },
                   ),
                   TextFormField(
@@ -249,13 +249,13 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'Job title'),
                     keyboardType: TextInputType.text,
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return 'Please provide your job title';
                       }
                       return null;
                     },
                     onSaved: (value) {
-                      _jobTitle = value;
+                      _jobTitle = value ?? "";
                     },
                   ),
                   TextFormField(
@@ -263,13 +263,13 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'Phone number'),
                     keyboardType: TextInputType.phone,
                     validator: (value) {
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return 'Please provide your phone number';
                       }
                       return null;
                     },
                     onSaved: (value) {
-                      _phone = value;
+                      _phone = value ?? "";
                     },
                   ),
                 ],
@@ -278,13 +278,13 @@ class _AuthCardState extends State<AuthCard> {
                   decoration: InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
+                    if (value!.isEmpty || !value.contains('@')) {
                       return 'Invalid email';
                     }
                     return null;
                   },
                   onSaved: (value) {
-                    _email = value;
+                    _email = value ?? "";
                   },
                 ),
                 TextFormField(
@@ -292,13 +292,13 @@ class _AuthCardState extends State<AuthCard> {
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
-                    if (value.isEmpty || value.length < 3) {
+                    if (value!.isEmpty || value.length < 3) {
                       return 'Password is too short';
                     }
                     return null;
                   },
                   onSaved: (value) {
-                    _password = value;
+                    _password = value ?? "";
                   },
                 ),
                 if (_authMode == AuthMode.Signup)
@@ -340,7 +340,7 @@ class _AuthCardState extends State<AuthCard> {
                               primary: Theme.of(context).primaryColor,
                               onPrimary: Theme.of(context)
                                   .primaryTextTheme
-                                  .button
+                                  .button!
                                   .color,
                             ),
                           ),
@@ -349,7 +349,7 @@ class _AuthCardState extends State<AuthCard> {
                                 '${_authMode == AuthMode.Login ? 'Create an account' : 'Have an acount? LOGIN'}'),
                             onPressed: () {
                               // reset form fields
-                              _formKey.currentState.reset();
+                              _formKey.currentState!.reset();
                               _firstnameController.text = "";
                               _lastnameController.text = "";
                               _jobtitleController.text = "";

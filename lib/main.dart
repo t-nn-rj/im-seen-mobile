@@ -37,9 +37,12 @@ class MentalAlert extends StatelessWidget {
         title: 'MentalAlert',
         // defines theme for the whole app
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          accentColor: Colors.deepOrange,
           fontFamily: 'Lato',
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.blue,
+          ).copyWith(
+            secondary: Colors.deepOrange,
+          ),
         ),
         home: FutureBuilder(
             future: getUserData(),
@@ -56,13 +59,16 @@ class MentalAlert extends StatelessWidget {
                       title: const Text('Error'),
                       content: Text('Error: ${snapshot.error}'),
                     );
-                  else if (snapshot.data.token == null)
-                    return AuthScreen();
-                  else {
-                    Provider.of<UserProvider>(context).setUser(snapshot.data);
+                  else if (snapshot.hasData) {
+                    final up = snapshot.data as User;
+                    if (up.getToken == "") return AuthScreen();
+                  } else {
+                    Provider.of<UserProvider>(context)
+                        .setUser(snapshot.data as User);
                     return ReportScreen();
                   }
               }
+              return AuthScreen();
             }),
         routes: {
           AuthScreen.routeName: (ctx) => AuthScreen(),

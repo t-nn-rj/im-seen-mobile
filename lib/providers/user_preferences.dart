@@ -30,22 +30,22 @@ class UserPreferences {
     //String userId = prefs.getString("userId");
     //String firstname = prefs.getString("firstname");
     //String lastname = prefs.getString("lastname");
-    String email = prefs.getString("email");
+    String? email = prefs.getString("email");
     //String phone = prefs.getString("phone");
     //String jobTitle = prefs.getString("jobTitle");
-    String token = prefs.getString("token");
-    String refreshToken = prefs.getString("refreshToken");
+    String? token = prefs.getString("token");
+    String? refreshToken = prefs.getString("refreshToken");
     //String expiresIn = prefs.getString("expiresIn");
 
     return User(
       //userId: userId,
       //firstname: firstname,
       //lastname: lastname,
-      email: email,
+      email: email ?? "",
       //phone: phone,
       //jobTitle: jobTitle,
-      token: token,
-      refreshToken: refreshToken,
+      token: token ?? "",
+      refreshToken: refreshToken ?? "",
       //expiresIn: expiresIn
     );
   }
@@ -66,9 +66,9 @@ class UserPreferences {
   }
 
   // retrieves token from storage
-  Future<String> getToken(args) async {
+  Future<String> getToken() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    String token = prefs.getString("token");
-    return token;
+    String? token = prefs.getString("token");
+    return token ?? "";
   }
 }

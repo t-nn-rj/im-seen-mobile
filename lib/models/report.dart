@@ -10,13 +10,13 @@ class Report {
   DateTime dateTime;
 
   Report({
-    @required this.reportId,
-    @required this.userName,
-    @required this.firstname,
-    @required this.lastname,
-    @required this.description,
-    @required this.severity,
-    @required this.dateTime,
+    required this.reportId,
+    required this.userName,
+    required this.firstname,
+    required this.lastname,
+    required this.description,
+    required this.severity,
+    required this.dateTime,
   });
 
   factory Report.fromJson(Map<String, dynamic> json) {

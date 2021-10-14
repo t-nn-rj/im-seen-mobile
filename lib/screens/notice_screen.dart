@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 // this class renders the notice screen
 class NoticeScreen extends StatelessWidget {
-  const NoticeScreen({Key key}) : super(key: key);
   static const routeName = '/notice';
 
   @override
@@ -95,7 +94,7 @@ class NoticeScreen extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
                     primary: Theme.of(context).primaryColor,
-                    onPrimary: Theme.of(context).primaryTextTheme.button.color,
+                    onPrimary: Theme.of(context).primaryTextTheme.button!.color,
                   ),
                 ),
               ],
