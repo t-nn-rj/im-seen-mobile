@@ -31,7 +31,7 @@ class NoticeScreen extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  "Observations of high risk behavior indicating immediate danger should be directly communicated to school offcials in addition to being reported through this app.",
+                  "Observations of high risk behavior indicating immediate danger should be directly communicated to school officials in addition to being reported through this app.",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 20,
@@ -73,7 +73,7 @@ class NoticeScreen extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "Level 5 indicates a serious concern, for example, a student could be a danger to themselves or others. Level 5 concerns should be reported to the appropriate school offical separately from reporting the observation through this app.",
+                  "Level 5 indicates a serious concern, for example, a student could be a danger to themselves or others. Level 5 concerns should be reported to the appropriate school official separately from reporting the observation through this app.",
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
                     fontSize: 16,

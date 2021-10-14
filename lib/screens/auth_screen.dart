@@ -41,12 +41,12 @@ class AuthScreen extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: Container(
+                      width: deviceSize.width * 0.75,
                       margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-                      padding: EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 40.0),
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.deepOrange.shade900,
+                        color: Colors.lightBlue[100],
                         boxShadow: [
                           BoxShadow(
                             blurRadius: 8,
@@ -56,7 +56,8 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        'Mental Alert',
+                        'IMseen',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                           fontSize: 50,

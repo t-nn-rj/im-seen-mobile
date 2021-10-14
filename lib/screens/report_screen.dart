@@ -72,6 +72,7 @@ class _ReportScreenState extends State<ReportScreen> {
           String title = "Submitted";
           String content = "The report has been submitted successfully.";
           String buttonText = "Okay";
+          _form.currentState!.reset();
           Function()? func = () {
             Navigator.of(context).pop();
           };

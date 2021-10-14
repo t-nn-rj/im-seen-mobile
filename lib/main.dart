@@ -41,7 +41,7 @@ class MentalAlert extends StatelessWidget {
           colorScheme: ColorScheme.fromSwatch(
             primarySwatch: Colors.blue,
           ).copyWith(
-            secondary: Colors.deepOrange,
+            secondary: Colors.blueAccent,
           ),
         ),
         home: FutureBuilder(
