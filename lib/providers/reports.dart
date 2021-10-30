@@ -14,9 +14,10 @@ class ReportProvider with ChangeNotifier {
     var result;
 
     try {
+      //Future.delayed(const Duration(milliseconds: 500), () {});
       final response = await postReport(report);
-      print(response.statusCode);
-      print(response.body);
+      //print(response.statusCode);
+      //print(response.body);
 
       if (response.statusCode == 201) {
         final Map<String, dynamic> responseData = json.decode(response.body);
@@ -30,18 +31,19 @@ class ReportProvider with ChangeNotifier {
       } else if (response.statusCode == 401) {
         // if token expires, try get new token
         User user = await UserPreferences().getUser();
-        final res = await http.post(
-          Uri.http(AppUrl.baseURL, AppUrl.refresh_token),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode({
-            'accessToken': user.token,
-            'refreshToken': user.refreshToken,
-          }),
+
+        final queryParameters = {
+          'accessToken': user.token,
+          'refreshToken': user.refreshToken,
+        };
+
+        http.Response res = await http.post(
+          Uri.http(AppUrl.baseURL, AppUrl.refresh_token, queryParameters),
+          headers: {'Content-Type': 'application/json'},
         );
-        print(res.statusCode);
-        print(res.body);
+
+        //print(res.statusCode);
+        //print(res.body);
 
         if (res.statusCode == 200) {
           // remove old user token
@@ -57,8 +59,8 @@ class ReportProvider with ChangeNotifier {
 
           // send report again
           final resp = await postReport(report);
-          print(resp.statusCode);
-          print(resp.body);
+          //print(resp.statusCode);
+          //print(resp.body);
           if (resp.statusCode == 201) {
             final Map<String, dynamic> respData = json.decode(resp.body);
             notifyListeners();
@@ -82,7 +84,7 @@ class ReportProvider with ChangeNotifier {
           result = {
             'status': false,
             'loginAgain': true,
-            'message': json.decode(res.body)['message'],
+            'message': 'Session expired, please login again',
           };
         }
       } else {
@@ -109,19 +111,20 @@ class ReportProvider with ChangeNotifier {
     final timestamp = DateTime.now();
     User user = await UserPreferences().getUser();
     final response = await http.post(
-      Uri.http(AppUrl.baseURL, AppUrl.add_report),
+      Uri.http(AppUrl.liveBaseURL, AppUrl.add_report),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
         'Authorization': 'Bearer ${user.token}',
       },
       body: jsonEncode({
-        //'firstname': report.firstname,
-        //'lastname': report.lastname,
-        'studentName': report.firstname + " " + report.lastname,
-        'userName': user.email,
-        'description': report.description,
-        'severity': report.severity,
-        'observationDate': timestamp.toIso8601String(),
+        'StudentFirstName': report.firstname,
+        'StudentLastName': report.lastname,
+        //'studentName': report.firstname + " " + report.lastname,
+        'UserName': user.email,
+        'Description': report.description,
+        'Severity': report.severity,
+        'ObservationDate': timestamp.toIso8601String(),
+        'Status': 'New',
       }),
     );
     return response;

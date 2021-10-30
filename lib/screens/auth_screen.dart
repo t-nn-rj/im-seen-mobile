@@ -323,7 +323,7 @@ class _AuthCardState extends State<AuthCard> {
                   future: authMessage,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
+                      return Center(child: CircularProgressIndicator());
                     } else {
                       return Column(
                         children: [

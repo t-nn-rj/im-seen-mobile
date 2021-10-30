@@ -1,7 +1,7 @@
 // stores api urls
 class AppUrl {
   static const String liveBaseURL = "im.godandanime.tv";
-  static const String localBaseURL = "localhost";
+  static const String localBaseURL = "localhost:44381";
 
   static const String baseURL = liveBaseURL;
   static const String login = "/api/authentication/login";

@@ -216,7 +216,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                          return Center(child: CircularProgressIndicator());
                         } else {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
