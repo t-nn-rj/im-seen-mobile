@@ -64,9 +64,6 @@ class MentalAlert extends StatelessWidget {
                     if (u.token == "") {
                       return AuthScreen();
                     }
-                    //final userProvider =
-                    //    Provider.of<UserProvider>(context, listen: false);
-                    //userProvider.setUser(snapshot.data as User);
                     return ReportScreen();
                   }
               }
