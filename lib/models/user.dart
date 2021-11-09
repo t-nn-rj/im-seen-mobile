@@ -22,10 +22,6 @@ class User {
     //this.expiresIn,
   });
 
-  String get getToken {
-    return this.token;
-  }
-
   // translate Json data to user model
   factory User.fromJson(Map<String, dynamic> responseData) {
     return User(

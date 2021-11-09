@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Report {
   String reportId;
   String userName;

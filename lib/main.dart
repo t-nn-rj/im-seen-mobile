@@ -34,7 +34,7 @@ class MentalAlert extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'MentalAlert',
+        title: 'IMseen',
         // defines theme for the whole app
         theme: ThemeData(
           fontFamily: 'Lato',
@@ -59,16 +59,17 @@ class MentalAlert extends StatelessWidget {
                       title: const Text('Error'),
                       content: Text('Error: ${snapshot.error}'),
                     );
-                  else if (snapshot.hasData) {
-                    final up = snapshot.data as User;
-                    if (up.getToken == "") return AuthScreen();
-                  } else {
-                    Provider.of<UserProvider>(context)
-                        .setUser(snapshot.data as User);
+                  else {
+                    final u = snapshot.data as User;
+                    if (u.token == "") {
+                      return AuthScreen();
+                    }
+                    //final userProvider =
+                    //    Provider.of<UserProvider>(context, listen: false);
+                    //userProvider.setUser(snapshot.data as User);
                     return ReportScreen();
                   }
               }
-              return AuthScreen();
             }),
         routes: {
           AuthScreen.routeName: (ctx) => AuthScreen(),

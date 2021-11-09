@@ -5,6 +5,9 @@ import '../widgets/app_drawer.dart';
 import '../models/report.dart';
 import '../providers/reports.dart';
 import '../providers/auth.dart';
+import '../models/user.dart';
+import '../providers/user_preferences.dart';
+import '../providers/user_provider.dart';
 
 /* This class renders the report page
 */
@@ -30,9 +33,16 @@ class _ReportScreenState extends State<ReportScreen> {
     dateTime: DateTime.now(),
   );
   Future<Map<String, dynamic>>? reportSubmitted;
+  Future<User>? userFuture;
 
   @override
   Widget build(BuildContext context) {
+    // at this page, user info should exist
+    userFuture = UserPreferences().getUser();
+    userFuture!.then((user) {
+      Provider.of<UserProvider>(context, listen: false).setUser(user);
+    });
+
     AuthProvider auth = Provider.of<AuthProvider>(context);
     // for show error message
     void _showInfoDialog(
