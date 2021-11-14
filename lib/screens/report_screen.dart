@@ -8,6 +8,7 @@ import '../providers/auth.dart';
 import '../models/user.dart';
 import '../providers/user_preferences.dart';
 import '../providers/user_provider.dart';
+import 'field_validator.dart';
 
 /* This class renders the report page
 */
@@ -139,10 +140,9 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please provide the student\'s first name.';
-                        }
-                        return null;
+                        String? result = FieldValidator.validateField(
+                            value, "First name", r'([a-zA-Z])', 30);
+                        return result;
                       },
                       onSaved: (value) {
                         _reportData.firstname = value ?? "";
@@ -162,10 +162,9 @@ class _ReportScreenState extends State<ReportScreen> {
                       ),
                       textInputAction: TextInputAction.next,
                       validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please provide the student\'s last name.';
-                        }
-                        return null;
+                        String? result = FieldValidator.validateField(
+                            value, "Last name", r'([a-zA-Z])', 30);
+                        return result;
                       },
                       onSaved: (value) {
                         _reportData.lastname = value ?? "";

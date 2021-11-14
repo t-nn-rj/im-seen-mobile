@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth.dart';
 import '../providers/user_provider.dart';
 import '../models/user.dart';
+import 'field_validator.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -172,8 +173,6 @@ class _AuthCardState extends State<AuthCard> {
 
           authMessage!.then((response) {
             if (response['status']) {
-              //User user = response['user'];
-              //Provider.of<UserProvider>(context, listen: false).setUser(user);
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
@@ -190,7 +189,6 @@ class _AuthCardState extends State<AuthCard> {
                   ],
                 ),
               );
-              //Navigator.of(context).pushReplacementNamed('/report');
             } else {
               String error = response['message'];
               _showErrorDialog(error);
@@ -198,7 +196,7 @@ class _AuthCardState extends State<AuthCard> {
           });
         }
       } else {
-        _showErrorDialog('Some information is invalid.');
+        return;
       }
     };
 
@@ -222,10 +220,9 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'First name'),
                     keyboardType: TextInputType.name,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please provide your first name';
-                      }
-                      return null;
+                      String? result = FieldValidator.validateField(
+                          value, "First name", r'([a-zA-Z])', 30);
+                      return result;
                     },
                     onSaved: (value) {
                       _firstname = value ?? "";
@@ -236,10 +233,9 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'Last name'),
                     keyboardType: TextInputType.name,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please provide your last name';
-                      }
-                      return null;
+                      String? result = FieldValidator.validateField(
+                          value, "Last name", r'([a-zA-Z])', 30);
+                      return result;
                     },
                     onSaved: (value) {
                       _lastname = value ?? "";
@@ -250,39 +246,36 @@ class _AuthCardState extends State<AuthCard> {
                     decoration: InputDecoration(labelText: 'Job title'),
                     keyboardType: TextInputType.text,
                     validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please provide your job title';
-                      }
-                      return null;
+                      String? result = FieldValidator.validateField(
+                          value, "Job title", r'([a-zA-Z])', 30);
+                      return result;
                     },
                     onSaved: (value) {
                       _jobTitle = value ?? "";
                     },
                   ),
-                  TextFormField(
-                    controller: _phonenumberController,
-                    decoration: InputDecoration(labelText: 'Phone number'),
-                    keyboardType: TextInputType.phone,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please provide your phone number';
-                      }
-                      return null;
-                    },
-                    onSaved: (value) {
-                      _phone = value ?? "";
-                    },
-                  ),
+                  // TextFormField(
+                  //   controller: _phonenumberController,
+                  //   decoration: InputDecoration(labelText: 'Phone number'),
+                  //   keyboardType: TextInputType.phone,
+                  //   validator: (value) {
+                  //     String? result = validateField(
+                  //         value, "Phone number", r'([a-zA-Z])', 30);
+                  //     return result;
+                  //   },
+                  //   onSaved: (value) {
+                  //     _phone = value ?? "";
+                  //   },
+                  // ),
                 ],
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
-                    if (value!.isEmpty || !value.contains('@')) {
-                      return 'Invalid email';
-                    }
-                    return null;
+                    String? result = FieldValidator.validateField(value,
+                        "Email", r'(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$)', 30);
+                    return result;
                   },
                   onSaved: (value) {
                     _email = value ?? "";
@@ -293,10 +286,12 @@ class _AuthCardState extends State<AuthCard> {
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
-                    if (value!.isEmpty || value.length < 3) {
-                      return 'Password is too short';
-                    }
-                    return null;
+                    String? result = FieldValidator.validateField(
+                        value,
+                        "Password",
+                        r'(^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$)',
+                        20);
+                    return result;
                   },
                   onSaved: (value) {
                     _password = value ?? "";
